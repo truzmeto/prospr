@@ -27,7 +27,10 @@ class PsiblastManager:
         self.local_dir= pconf.basedir + "psiblast/" 
         self.dl_server="ftp.ncbi.nlm.nih.gov"
         self.remote_dir="blast/db/"
-        self.psbin = "/usr/bin/psiblast"
+        #self.psbin = "/usr/bin/psiblast"
+        #self.psbin = "/g1/software/blast+/install/2.5.0+_binary_dl/bin/psiblast"
+        self.psbin = "/u1/home/tr443/anaconda3/bin/psiblast"
+        
         # makes any named argument a variable on this object
         self.__dict__.update(kwargs) 
 
@@ -97,22 +100,22 @@ class PsiblastManager:
 
     def build_query(self, domain, n_threads=1):
         dpath = pconf.basedir + domain + "/"
-# check to see if pssm file is there and if they want to use it
-        if os.path.exists(dpath+ domain +".pssm"):
+        # check to see if pssm file is there and if they want to use it
+        if os.path.exists(dpath + domain + ".pssm"):
             while True:
                 resp = input("pssm file exists, would you like to use it? [y,n] ")
                 if resp == "y":
                     return
                 if resp == "n":
                     break 
-        cmd = [self.psbin, 
-         '-query', dpath + domain+".fasta",
-         '-db', self.local_dir + "nr", 
-         "-out_ascii_pssm", dpath + domain +".pssm",
-         "-out", dpath + domain + ".out",
-         "-evalue", "0.001",
-         "-num_iterations", "3",
-         "-save_pssm_after_last_round"]
+        cmd = [self.psbin,
+               '-query', dpath + domain+".fasta",
+               '-db', self.local_dir + "nr", 
+               "-out_ascii_pssm", dpath + domain +".pssm",
+               "-out", dpath + domain + ".out",
+               "-evalue", "0.001",
+               "-num_iterations", "3",
+               "-save_pssm_after_last_round"]
         if n_threads > 1:
             cmd.extend(['-num_threads', '%d'%n_threads])
         subprocess.run(cmd)

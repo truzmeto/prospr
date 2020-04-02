@@ -1,4 +1,6 @@
 import numpy as np
+import re
+
 
 def probability(n):
     try:
@@ -7,11 +9,13 @@ def probability(n):
         return 0.
     return 2.**(-counts/1000.)
 
+
 def findRows(filename):
     with open(filename) as f:
-        contents=f.read()
+        contents = f.read()
     result = re.search('LENG  (.*) match', contents)
     return int(result.group(1))
+
 
 def findHashTag(data):
     for i,line in enumerate(data):

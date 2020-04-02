@@ -256,19 +256,24 @@ def pickled_no_potts(name = None, i = None, j = None):
     curr+=21    
     
     #pssm
-    empty_vector[curr:curr+20, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(   pssm[lower_i:upper_i,np.newaxis,:], jrange, axis=1),axes=(2,0,1))
+    #sh1 = empty_vector[curr:curr+20, vlower_i:vupper_i, vlower_j:vupper_j].shape
+    #sh2 = np.transpose(np.repeat(pssm[np.newaxis,lower_j:upper_j,:], irange, axis=0),axes=(2,0,1)).shape  
+    #print(sh1, sh2)
+    #print(vupper_j - vlower_j) ???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????
+        
+    empty_vector[curr:curr+20, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(pssm[lower_i:upper_i,np.newaxis,:], jrange, axis=1),axes=(2,0,1))
     curr+=20    
-    empty_vector[curr:curr+20, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(   pssm[np.newaxis,lower_j:upper_j,:], irange, axis=0),axes=(2,0,1))
+    empty_vector[curr:curr+20, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(pssm[np.newaxis,lower_j:upper_j,:], irange, axis=0),axes=(2,0,1))
     curr+=20
     
     #hh
-    empty_vector[curr:curr+30, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(     hh[lower_i:upper_i,np.newaxis,:], jrange, axis=1),axes=(2,0,1))
+    empty_vector[curr:curr+30, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(hh[lower_i:upper_i,np.newaxis,:], jrange, axis=1),axes=(2,0,1))
     curr+=30
-    empty_vector[curr:curr+30, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(     hh[np.newaxis,lower_j:upper_j,:], irange, axis=0),axes=(2,0,1))
+    empty_vector[curr:curr+30, vlower_i:vupper_i, vlower_j:vupper_j] = np.transpose(np.repeat(hh[np.newaxis,lower_j:upper_j,:], irange, axis=0),axes=(2,0,1))
     curr+=30
     
     #Seq_len
-    empty_vector[curr,vlower_i:vupper_i, vlower_j:vupper_j]=len_seq
+    empty_vector[curr,vlower_i:vupper_i, vlower_j:vupper_j] = len_seq
     curr+=1
     
     input_vector = torch.tensor(empty_vector,dtype=torch.float)

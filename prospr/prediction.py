@@ -1,23 +1,34 @@
 import numpy as np
+import os
+import sys
 from .dataloader import pickled, pickled_no_msa, pickled_no_potts
 from prospr.common import norm, make_uint8
 from prospr.io import load
 from prospr.nn import *
 from prospr.pconf import basedir
 
-def domain(name, model, stride = 1, network_type = 1):
+#sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+#from prospr.dataloader import pickled, pickled_no_msa, pickled_no_potts
+#from prospr.common import norm, make_uint8
+#from prospr.io import load
+#from prospr.nn import *
+#from prospr.pconf import basedir
+
+
+def domain(name, model, stride = 1, network_type = 3):
     
     BATCH_SIZE = 1
     SS_BINS = 9
     ANGLE_BINS = 37
     DIST_BINS = 64
-    pklfilename = basedir +name+ "/" + name +'.pkl' 
+    pklfilename = basedir + name + "/" + name +'.pkl' 
     data = load(pklfilename)
+
+    print(int(network_type))
     
     seq = data['seq']
     seq_len = len(seq)
-    
-    
+        
     ss_sum = np.zeros([SS_BINS,seq_len])
     phi_sum = np.zeros([ANGLE_BINS,seq_len])
     psi_sum = np.zeros([ANGLE_BINS,seq_len])
@@ -40,7 +51,8 @@ def domain(name, model, stride = 1, network_type = 1):
     crop_num = 1    
     last_update = 0
     
-    i = j = 0
+    i = 0
+    j = 0
     while i < seq_len:
         while j < seq_len:
 
@@ -56,6 +68,7 @@ def domain(name, model, stride = 1, network_type = 1):
                     input_vector, label, label_ss_i, label_ss_j, label_phi_i, label_phi_j, label_psi_i, label_psi_j = pickled_no_msa(name, i, j)
                 else:
                     print(network_type, type(network_type))
+
                 profile[b,:] = input_vector
                 labels[b,:] = torch.tensor(label.detach().numpy(), dtype=torch.long)
 
@@ -159,3 +172,17 @@ def domain(name, model, stride = 1, network_type = 1):
     dist_prob = torch.nn.functional.softmax(dist_pred, dim=1)
     dist_prob = dist_prob.reshape(DIST_BINS, seq_len, seq_len)    
     return dist_prob, loss_dist
+
+if __name__=='__main__':
+    print("dude")
+
+    #from prospr.io import load_model #, Sequence, save
+    #name = "name2seq"
+    ##name = 'T1016-D1'
+    ##network = 1
+    ##stride = 25
+    #model_path = "../data/"
+    #network_type = "no-potts"
+    #model = load_model(model_path + network_type + ".nn")
+    #d, _ = domain(name, model, stride = 1, network_type = 2)
+    

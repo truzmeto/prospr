@@ -57,7 +57,8 @@ class BlitsAndPottsRunner(threading.Thread):
         s.__dict__.update(kwargs)
 
     def run(s):
-        bin_dir = "/usr/local/bin/"
+        #bin_dir = "/usr/local/bin/"
+        bin_dir = "/u1/home/tr443/anaconda3/bin/"
         hbin = bin_dir + "hhblits"
         hmake = bin_dir + "hhmake"
         hhmf = s.out_dir + s.domain + ".hhm"
@@ -65,7 +66,7 @@ class BlitsAndPottsRunner(threading.Thread):
         a3mf = s.out_dir + s.domain + ".a3m"
         hhblitsCommand = [hbin, "-i", s.fasta, "-oa3m", a3mf, "-d",s.hhdb, "-o", hhrf]
         hhblitsCommand.extend(s.hhoptions.split(" "))
-# naw, do subprocess and proper console outputs
+        # naw, do subprocess and proper console outputs
         subprocess.run(hhblitsCommand)
 
         print("[%s] hhblits completed." % datetime.now())

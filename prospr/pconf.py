@@ -1,1 +1,1 @@
-basedir = "/data/"
+basedir = "./data/"
